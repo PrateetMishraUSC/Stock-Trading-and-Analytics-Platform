@@ -1,0 +1,133 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<script src="https://kit.fontawesome.com/f26a391ca3.js" crossorigin="anonymous"></script>
+
+<div class="container  mt-3 col-sm-12 col-lg-7 col-11 mx-auto">
+  <ngb-alert class="alert mt-4" *ngIf="stockSold" type="success">
+    {{recentlyTradedStock}} has been sold.
+  </ngb-alert>
+  <ngb-alert class="alert mt-4" *ngIf="stockBought" type="success">
+    {{recentlyTradedStock}} has been bought.
+  </ngb-alert>
+    <h2 id="heading" class="my-3 mx-3">My Portfolio</h2>
+    <div class="row" *ngIf="isCardVisible && portfolio && price && walletMoney">
+      <h3 id="heading-2" class = "mx-3"> Money in wallet: ${{walletMoney[0].moneyInWallet}} </h3>
+      <ngb-alert class="alert mt-2" *ngIf="noMatchFound" type="warning" [dismissible]="false">
+        Currently you don't have any stocks.
+      </ngb-alert>
+      
+      <div class="col">
+        <div class="card mb-3" *ngFor="let item of portfolio">
+            <div class="card-header d-flex align-items-center">
+                <h5 id="big-head" class="mb-0 mr-2">{{item.ticker}}</h5>
+                <h6 id="small-head">{{item.stockname}}</h6>
+            </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col row2">
+                Quantity:
+              </div>
+              <div class="col row2">
+                {{item.quantity}}
+              </div>
+              <div class="col row2">
+                Change:
+              </div>
+              <div class="col row2">
+                {{item.avgPrice - price[item.ticker]?.c | number:'1.2-2' }}
+              </div>
+            </div>
+            <div class="row">
+                <div class="col row2">
+                    Avg. Cost / Share:
+                </div>
+                <div class="col row2">
+                    {{item.avgPrice | number:'1.2-2'}}
+                </div>
+                <div class="col row2">
+                    Current Price:
+                </div>
+                <div class="col row2">
+                  {{price[item.ticker]?.c}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col row2">
+                    Total Cost:
+                </div>
+                <div class="col row2">
+                    {{getTotalCostPortfolio(item)}}
+                </div>
+                <div class="col row2">
+                    Market Value:
+                </div>
+                <div class="col row2">
+                    {{price[item.ticker]?.c * item.quantity | number:'1.2-2' }}
+                </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-start">
+                <button id="buy-button" class="btn btn-primary mr-2" (click)="portfolioBuyModal(buyModal)">Buy</button>
+                <button class="btn btn-danger" (click)="portfolioSellModal(sellModal)">Sell</button>
+                
+                <!-- buy modal -->
+                <ng-template #buyModal let-modal>
+                    <div class="modal-header">
+                      <div style="display: flex; flex-direction: column;">
+                        <h4 class="modal-title" id="modal-basic-title">{{item.ticker}}</h4>
+                      </div>
+                      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+                    </div>
+                    <div class="modal-body" style="display: flex; flex-direction: column;">
+                      <span id="modal-headline">Current Price: {{price[item.ticker]?.c}}</span>
+                      <span id="modal-summary">Money in wallet: {{walletMoney[0].moneyInWallet}}</span>
+                      <div>
+                        <label for="quantity">Quantity:</label>
+                        <input class="w-75" [(ngModel)]="quantity" type="number" id="quantity" name="quantity" min="1" style="border-radius: 5px;margin-left:5px">
+                    </div>
+                    <div *ngIf="walletMoney[0].moneyInWallet < quantity * price[item.ticker]?.c" style="color: red;font-size:small;margin-left:70px">
+                      Not enough money in wallet!
+                    </div>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-between align-items-center">
+                        <span>Total: {{price[item.ticker]?.c * quantity | number:'1.2-2' }}</span>
+                        <button type="button" [disabled]="walletMoney[0].moneyInWallet < quantity * price[item.ticker]?.c" class="btn btn-success" (click)="buyStock(item.ticker, item.stockname, quantity, item.avgPrice )">Buy</button>
+                    </div>
+                  </ng-template>
+                  
+                  <!-- sell modal -->
+                  <ng-template #sellModal let-modal>
+                    <div class="modal-header">
+                      <div style="display: flex; flex-direction: column;">
+                        <h4 class="modal-title" id="modal-basic-title">{{item.ticker}}</h4>
+                      </div>
+                      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+                    </div>
+                    <div class="modal-body" style="display: flex; flex-direction: column;">
+                      <span id="modal-headline">Current Price: {{price[item.ticker]?.c}}</span>
+                      <span id="modal-summary">Money in wallet: {{walletMoney[0].moneyInWallet}}</span>
+                      <div>
+                        <label for="quantity">Quantity:</label>
+                        <input class="w-75" type="number" [(ngModel)]="quantity" id="quantity" name="quantity" min="1" style="border-radius: 5px;margin-left:5px">
+                    </div>
+                    <div *ngIf="quantity > item.quantity" style="color: red;font-size:small;margin-left:70px">
+                      You cannot sell the stock which you don't have!
+                    </div>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-between align-items-center">
+                        <span>Total: {{price[item.ticker]?.c * quantity | number:'1.2-2' }}</span>
+                        <button type="button" [disabled]="quantity > item.quantity" class="btn btn-success" (click)="sellStock(item.ticker, item.stockname, quantity, item.avgPrice, walletMoney[0].moneyInWallet )">Sell</button>
+                    </div>
+                  </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+

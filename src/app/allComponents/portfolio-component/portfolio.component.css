@@ -1,0 +1,70 @@
+/* .custom-container {
+    margin-left: 25%;
+    margin-top: 2%;
+} */
+
+/* .custom-card {
+    width: 50%;
+    margin-top: 1%;
+} */
+#heading {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.5rem;
+}
+#heading-2 {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.2rem;
+}
+#big-head {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.2rem;
+}
+#small-head {
+    font-weight: 300;
+    font-style: normal;
+    font-size: 0.9rem;
+    margin-left: 5px;
+    margin-top: 13px;
+}
+.row1 {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.2rem;
+    margin-bottom: 0.5%;
+}
+.row2 {
+    font-weight: 300;
+    font-style: normal;
+    font-size: 0.9rem;
+}
+button {
+    font-size: 0.8rem;
+    font-weight: 300;
+    font-style: normal;
+}
+#buy-button {
+    margin-right: 5px;
+}
+.alert {
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    text-align: center;
+} 
+.footer {
+    width: 100%;
+    font-weight: 300;  
+    line-height: 40px;
+    margin-top: auto;
+    background-color: #ededed;
+}
+.footer-fixed {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: "Roboto", sans-serif;
+}

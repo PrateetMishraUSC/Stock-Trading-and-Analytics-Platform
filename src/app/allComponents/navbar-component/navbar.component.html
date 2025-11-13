@@ -1,0 +1,30 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<nav class="navbar navbar-expand-lg navbar-dark py-0" style="background-color: #3f51b5;">
+  <div class="container-fluid">
+    <a class="navbar-brand stock-search" href="#">Stock Search</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <button class="navbar-options" (click)="onSearchClick()" autofocus>Search</button>
+        </li>
+        <li class="nav-item">
+          <button class="navbar-options" routerLink="/watchlist" routerLinkActive="active" ariaCurrentWhenActive="page">Watchlist</button>
+        </li>
+        <li class="nav-item">
+          <button class="navbar-options" routerLink="/portfolio" routerLinkActive="active" ariaCurrentWhenActive="page">Portfolio</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+

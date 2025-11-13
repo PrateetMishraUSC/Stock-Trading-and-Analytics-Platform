@@ -1,0 +1,459 @@
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script
+    src="https://kit.fontawesome.com/f26a391ca3.js"
+    crossorigin="anonymous"
+  ></script>
+</head>
+
+<h2 id="ss-text" class="text-center mt-4 h1 h-sm-2 h-md-3 h-lg-4">
+  STOCK SEARCH
+</h2>
+<form class="example-form row">
+  <div class="col-8 col-sm-6 col-md-4 mx-auto text-center position-relative">
+    <input
+      type="text"
+      placeholder="Enter stock ticker symbol"
+      [formControl]="control"
+      [matAutocomplete]="auto"
+      class="searchbar form-control"
+      (keyup.enter)="onSearch()"
+    />
+    <mat-icon
+      aria-hidden="false"
+      class="searchbar-options position-absolute"
+      id="search-icon"
+      fontIcon="search"
+      (click)="onSearch()"
+    ></mat-icon>
+    <mat-icon
+      aria-hidden="false"
+      class="searchbar-options position-absolute"
+      fontIcon="clear"
+      (click)="onClear()"
+    ></mat-icon>
+    <mat-autocomplete
+      #auto="matAutocomplete"
+      class="my-autocomplete"
+      [panelWidth]="250"
+    >
+      <ng-container>
+        <mat-option
+          *ngFor="let symbol of filteredSymbols | async"
+          [value]="splitStockName(symbol)"
+          >{{ symbol }}</mat-option
+        >
+      </ng-container>
+    </mat-autocomplete>
+  </div>
+</form>
+
+<ngb-alert
+  class="alert"
+  *ngIf="noMatchFound"
+  type="danger"
+  [dismissible]="false"
+>
+  No data found. Please enter a valid Ticker
+</ngb-alert>
+
+<ngb-alert class="alert" *ngIf="noInputEntered" type="danger">
+  Please enter a valid Ticker
+</ngb-alert>
+
+<div class="container">
+  <div *ngIf="stockData && stockPrice && wallet" class="row">
+    <ngb-alert
+      *ngIf="purchaseSuccess"
+      type="success"
+      (close)="purchaseSuccess = false"
+      class="col-12"
+    >
+      {{ stockData.ticker }} bought successfully.
+    </ngb-alert>
+    <ngb-alert
+      *ngIf="sellSuccess"
+      type="success"
+      (close)="sellSuccess = false"
+      class="col-12"
+    >
+      {{ stockData.ticker }} sold successfully.
+    </ngb-alert>
+    <div class="left-stock-data col-5 col-md-8 mt-4  d-flex justify-content-center align-items-center">
+      <span id="stockdata-ticker"
+        >{{ stockData.ticker
+        }}<span
+          id="stockdata-star"
+          [style.color]="starColor"
+          (click)="watchlist()"
+          style="font-size: 1rem; cursor: pointer; margin-left: 5px;"
+          >&#9734;</span
+        >
+      </span>
+      <span id="stockdata-name">{{ stockData.name }}</span>
+      <span id="stockdata-exchange">{{ stockData.exchange }}</span>
+      <div class="d-flex flex-column flex-md-row">
+        <button
+          class="btn btn-success btn-sm mr-4 mb-2 mb-md-0"
+          (click)="homeBuyModal(homeBuy)"
+        >
+          Buy
+        </button>
+        <button
+          class="btn btn-danger btn-sm"
+          *ngIf="isStockBought"
+          (click)="homeSellModal(homeSell)"
+        >
+          Sell
+        </button>
+      </div>
+
+      <!-- buy modal home -->
+      <ng-template #homeBuy let-modal>
+        <div class="modal-header">
+          <div style="display: flex; flex-direction: column">
+            <h4 class="modal-title" id="modal-basic-title">
+              {{ stockData.ticker }}
+            </h4>
+          </div>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+          ></button>
+        </div>
+        <div class="modal-body" style="display: flex; flex-direction: column">
+          <span id="modal-headline">Current Price: {{ stockPrice.c }}</span>
+          <span id="modal-summary"
+            >Money in wallet: {{ walletData?.[0].moneyInWallet }}</span
+          >
+          <div>
+            <label for="quantity">Quantity:</label>
+            <input
+              class="w-75"
+              [(ngModel)]="quantity"
+              type="number"
+              id="quantity"
+              name="quantity"
+              min="1"
+              style="border-radius: 5px; margin-left: 5px"
+            />
+          </div>
+          <div *ngIf="walletData[0].moneyInWallet < quantity * stockPrice.c" style="color: red;font-size:small;margin-left:70px">
+            Not enough money in wallet!
+          </div>
+        </div>
+        <div
+          class="modal-footer d-flex justify-content-between align-items-center;"
+        >
+          <span>Total: {{ stockPrice.c * quantity | number : "1.2-2" }}</span>
+          <button
+            type="button"
+            class="btn btn-success"
+            (click)="addStock()"
+            style="cursor: pointer"
+            [disabled]="walletData[0].moneyInWallet < stockPrice.c * quantity"
+          >
+            Buy
+          </button>
+        </div>
+      </ng-template>
+
+      <!-- sell modal home -->
+      <ng-template #homeSell let-modal>
+        <div class="modal-header">
+          <div style="display: flex; flex-direction: column">
+            <h4 class="modal-title" id="modal-basic-title">
+              {{ stockData.ticker }}
+            </h4>
+          </div>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+          ></button>
+        </div>
+        <div class="modal-body" style="display: flex; flex-direction: column">
+          <span id="modal-headline">Current Price: {{ stockPrice.c }}</span>
+          <span id="modal-summary"
+            >Money in wallet: {{ walletData[0].moneyInWallet }}</span
+          >
+          <div>
+            <label for="quantity">Quantity:</label>
+            <input
+              class="w-75"
+              [(ngModel)]="quantity"
+              type="number"
+              id="quantity"
+              name="quantity"
+              min="1"
+              style="border-radius: 5px; margin-left: 5px"
+            />
+          </div>
+          <div *ngIf="quantity > stockData.quantity" style="color: red;font-size:small;margin-left:70px">
+            You cannot sell the stock which you don't have!
+          </div>
+        </div>
+        <div
+          class="modal-footer d-flex justify-content-between align-items-center;"
+        >
+          <span>Total: {{ stockPrice.c * quantity | number : "1.2-2" }}</span>
+          <button
+            type="button"
+            class="btn btn-success"
+            style="cursor: pointer"
+            (click)="removeStock()"
+            [disabled]="quantity > stockData.quantity"
+
+          >
+            Sell
+          </button>
+        </div>
+      </ng-template>
+    </div>
+    <div class="col">
+      <img class="logo img-fluid mt-n3" [src]="stockData.logo" alt="Company Logo" />
+    </div>
+  </div>
+  <div *ngIf="stockPrice">
+    <div class="right-stock-data">
+      <span
+        id="stockprice-c"
+        [style.color]="
+          stockPrice.d < 0 || stockPrice.dp < 0 ? 'red' : 'green'
+        "
+        >{{ stockPrice.c }}</span
+      >
+      <span
+        id="stockprice-d"
+        [style.color]="stockPrice.d < 0 ? 'red' : 'green'"
+      >
+        <span
+          style="font-size: 0.8rem; vertical-align: middle; margin-right: 5px"
+          >{{ stockPrice.d < 0 ? "▼" : "▲" }}</span
+        >{{ stockPrice.d }} (<span
+          id="stockprice-dp"
+          [style.color]="stockPrice.dp < 0 ? 'red' : 'green'"
+          >{{ stockPrice.dp | number : "1.2-2" }}%</span
+        >)
+      </span>
+      <span id="stockprice-t">{{ transformTimestamp(stockPrice.t) }}</span>
+    </div>
+  </div>
+</div>
+
+
+<div class="page-container">
+  <div class="content-wrapper">
+    <div *ngIf="stockPrice && stockData && companyNews" class="all-tabs">
+      <mat-tab-group animationDuration="0ms">
+        <mat-tab label="Summary">
+          <div class="all-prices">
+            <span><b>High Price: </b>{{ stockPrice.h }}</span>
+            <span><b>Low Price: </b>{{ stockPrice.l }}</span>
+            <span><b>Open Price: </b>{{ stockPrice.o }}</span>
+            <span><b>Prev. Close: </b>{{ stockPrice.pc }}</span>
+          </div>
+          <div class="about-company">
+            <h6 id="about-company-heading"><u>About the company</u></h6>
+            <span>IPO Start Date: {{ stockData.ipo }}</span>
+            <span>Industry: {{ stockData.finnhubIndustry }}</span>
+            <span
+              >Webpage:
+              <a [href]="stockData.weburl" target="_blank">{{
+                stockData.weburl
+              }}</a></span
+            >
+            <span>Company peers:</span>
+            <span id="peers-list">
+              <a [routerLink]="['/search', peer]" *ngFor="let peer of peers"
+                >{{ peer }},</a
+              >,
+            </span>
+          </div>
+          <highcharts-chart
+            [Highcharts]="Highcharts"
+            [options]="chartOptions"
+            [oneToOne]="true"
+            style="
+              width: 473px;
+              height: 280px;
+              display: block;
+              position: absolute;
+              top: 0%;
+              left: 53%;
+            "
+          >
+          </highcharts-chart>
+        </mat-tab>
+        <mat-tab label="Top News">
+          <div class="card-container">
+            <div
+              *ngFor="let newsItem of companyNews"
+              class="card"
+              (click)="companyNewsModal(content, newsItem)"
+            >
+              <ng-template #content let-modal>
+                <div class="modal-header">
+                  <div style="display: flex; flex-direction: column">
+                    <h4 class="modal-title" id="modal-basic-title">
+                      {{ currentNewsItem.source }}
+                    </h4>
+                    <span id="modal-date">{{
+                      currentNewsItem.datetime | date : "MMMM d, y"
+                    }}</span>
+                  </div>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    aria-label="Close"
+                    (click)="modal.dismiss('Cross click')"
+                  ></button>
+                </div>
+                <div
+                  class="modal-body"
+                  style="display: flex; flex-direction: column"
+                >
+                  <span id="modal-headline">{{
+                    currentNewsItem.headline
+                  }}</span>
+                  <span id="modal-summary">{{ currentNewsItem.summary }}</span>
+                  <span id="modal-clickhere"
+                    >For more details click
+                    <a href="{{ currentNewsItem.url }}" target="_blank"
+                      >here</a
+                    ></span
+                  >
+                </div>
+                <div class="modal-footer">
+                  <div id="modal-share">
+                    <div
+                      style="
+                        display: flex;
+                        flex-direction: column;
+                        margin-left: 10px;
+                      "
+                    >
+                      <span id="share-text">Share</span>
+                      <div>
+                        <a
+                          href="https://twitter.com/intent/tweet?text={{
+                            currentNewsItem.headline
+                          }}&url={{ currentNewsItem.url }}"
+                          target="_blank"
+                        >
+                          <i
+                            class="fa-brands fa-2x fa-x-twitter"
+                            style="margin-right: 10px; color: black"
+                          ></i>
+                        </a>
+                        <a
+                          href="https://www.facebook.com/sharer/sharer.php?u={{
+                            currentNewsItem.url
+                          }}"
+                          target="_blank"
+                        >
+                          <i
+                            class="fab fa-2x fa-facebook-square"
+                            style="color: blue"
+                          ></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+              <div class="card-content">
+                <img
+                  mat-card-avatar
+                  class="square-avatar"
+                  [src]="newsItem.image"
+                  alt="News image"
+                />
+                <div class="text-content">{{ newsItem.headline }}</div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Charts">
+          <highcharts-chart
+            [Highcharts]="Highcharts"
+            [options]="smaChartOptions"
+            [oneToOne]="true"
+            [(update)]="updateFlag"
+            style="width: 100%; height: 600px; display: block"
+          >
+          </highcharts-chart>
+        </mat-tab>
+        <mat-tab label="Insights">
+          <div class="sentiments-table" *ngIf="insiderSentiments">
+            <span>Insider Sentiments</span>
+            <table class="sentiments-table-style">
+              <tr>
+                <td class="td-heading">{{ insiderSentiments.symbol }}</td>
+                <td class="td-heading">MSPR</td>
+                <td class="td-heading">Change</td>
+              </tr>
+              <tr>
+                <td class="td-heading">Total</td>
+                <td>{{ totalSumMspr }}</td>
+                <td>{{ totalSumChange }}</td>
+              </tr>
+              <tr>
+                <td class="td-heading">Positive</td>
+                <td>{{ positiveSumMspr }}</td>
+                <td>{{ positiveSumChange }}</td>
+              </tr>
+              <tr>
+                <td class="td-heading">Negative</td>
+                <td>{{ negativeSumMspr }}</td>
+                <td>{{ negativeSumChange }}</td>
+              </tr>
+            </table>
+          </div>
+          <highcharts-chart
+            [Highcharts]="Highcharts"
+            [options]="barChartOptions"
+            [oneToOne]="true"
+            [(update)]="updateFlag"
+            style="
+              width: 50%;
+              height: 280px;
+              display: block;
+              position: relative;
+            "
+          >
+          </highcharts-chart>
+          <highcharts-chart
+            [Highcharts]="Highcharts"
+            [options]="splineChartOptions"
+            [oneToOne]="true"
+            [(update)]="updateFlag"
+            style="
+              width: 48%;
+              height: 280px;
+              display: block;
+              position: absolute;
+              top: 37%;
+              left: 52%;
+            "
+          >
+          </highcharts-chart>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

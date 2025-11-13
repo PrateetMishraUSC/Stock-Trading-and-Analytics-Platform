@@ -1,0 +1,54 @@
+/* .custom-container {
+    margin-left: 25%;
+    margin-top: 2%;
+} */
+
+    /* .custom-card {
+        width: 50%;
+        margin-top: 1%;
+    } */
+#heading {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.5rem;
+}
+.row1 {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.2rem;
+    margin-bottom: 0.5%;
+}
+.row2 {
+    font-weight: 300;
+    font-style: normal;
+    font-size: 0.9rem;
+    margin-bottom: 1%;
+
+}
+.alert {
+    position: absolute;
+    top: 16%;
+    left: 26%;
+    width: 53vw;
+    height: 7vh;
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    font-size: .85rem;
+    text-align: center;
+
+}
+.footer {
+    width: 100%;
+    font-weight: 300;  
+    line-height: 40px;
+    margin-top: auto;
+    background-color: #ededed;
+}
+.footer-fixed {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: "Roboto", sans-serif;
+}

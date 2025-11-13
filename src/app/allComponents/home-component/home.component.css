@@ -1,0 +1,380 @@
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+  
+mat-toolbar {
+    height: 6%;
+}
+.stock-search {
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 1rem;
+    margin-left: 15px;
+}
+.navbar-options{
+    padding: 4px 12px 4px 12px;
+    color: #ededed;
+    font-size: 0.75rem;
+    border-style: none;
+    background: none;
+    margin-left: 3px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+}
+#portfolio {
+    margin-right: 15px;
+}
+.navbar-toggler-icon {
+    font-size: 1rem; /* Adjust the size as needed */
+}
+.navbar-toggler {
+    padding: 0.1rem 0.2rem; /* Adjust the padding as needed */
+  }
+.navbar-options:hover {
+    cursor: pointer;
+    color: white;
+    border-style: solid;
+    border-color: white;
+    border-radius: 10px;
+    border-width: thin;
+}
+.navbar-options:focus {
+    cursor: pointer;
+    border-style: solid;
+    border-color: white;
+    border-radius: 10px;
+    border-width: thin;
+}
+#ss-text {
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+}
+.searchbar {
+    border: 3px solid #3F51B5;
+    border-radius: 15px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+}
+#search-icon{
+    margin-right: 30px;
+}
+
+.searchbar-options {
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #3F51B5;
+} 
+.example-full-width {
+    width: 100%;
+  }
+#clear-button {
+    margin-left: 27px;
+}
+.alert {
+    position: absolute;
+    top: 23%;
+    left: 18%;
+    width: 65vw;
+    height: 6vh;
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    font-size: .85rem;
+    text-align: center;
+}
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.content-wrapper {
+  flex: 1;
+}
+.footer {
+    width: 100%;
+    font-weight: 300;  
+    line-height: 40px;
+    margin-top: auto;
+    background-color: #ededed;
+}
+.footer-fixed {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: "Roboto", sans-serif;
+}
+#finnhub-link {
+    margin-left: 3px;
+}
+mat-icon:hover {
+    cursor: pointer;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.spinning {
+    animation: spin 2s linear infinite;
+}
+
+.logo {
+    position: absolute;
+    height: 12%;
+    width: auto;
+    top: 25%;
+    left: 48%;
+}
+#market-status {
+    position: absolute;
+    top: 43%;
+    left: 42%;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: .8rem;
+}
+.left-stock-data {
+    position: absolute;
+    top: 23%;
+    left: 23%;
+    height: 20%;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: "Roboto", sans-serif;
+    line-height: 25px;
+}
+
+#stockdata-ticker {
+    font-weight: 500;
+    font-style: normal;
+    font-size: 1.8rem;
+    margin-right: 10px;
+    margin-bottom: 5px;
+}
+#stockdata-star {
+    position: absolute;
+    top:12%;
+    margin-left: 8px;
+}
+#stockdata-name{
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.1rem;
+    color: grey;
+    margin-left: 10px;
+}
+#stockdata-exchange {
+    font-weight: 300;
+    font-style: normal;
+    font-size: .7rem;
+}
+#stockdata-buy {
+    background-color: green;
+    color: white;
+    font-size: 0.6rem;
+    border-style: none;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.right-stock-data {
+    position: absolute;
+    top: 22%;
+    left: 68%;
+    height: 20%;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: "Roboto", sans-serif;
+    line-height: 25px;
+}
+#stockprice-c {
+    font-weight: 500;
+    font-style: normal;
+    font-size: 1.8rem;
+    margin-right: 10px;
+    margin-bottom: 5px;
+}
+#stockprice-d {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.1rem;
+    color: grey;
+    margin-left: 10px;
+}
+#stockprice-t{
+    font-weight: 300;
+    font-style: normal;
+    font-size: .7rem;
+}
+.all-tabs{
+    position: absolute;
+    top: 48%;
+    left: 15%;
+    width: 70%;
+    font-family: "Roboto", sans-serif;
+
+}
+.all-prices {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-weight: 300;
+    font-style: normal;
+    font-size: .7rem;
+    margin-left: 7%;
+    margin-top: 3%;
+}
+.about-company {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 300;
+    font-style: normal;
+    font-size: .7rem;
+    margin-right: 47%;
+    margin-top: 3%;
+    line-height: 25px;
+}
+#about-company-heading {
+    margin-bottom: 15px;
+}
+
+#peers-list { 
+    font-weight: 300;
+    font-style: normal;
+    font-size: .6rem;
+}
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+    height: 100%;
+    width: auto;
+    margin-top: 10px;
+}
+#modal-date {
+    font-weight: 300;
+    font-style: normal;
+    font-size: .8rem;
+}
+#modal-headline {
+    font-weight: 500;
+    font-style: normal;
+    font-size: 1.1rem;
+}
+#modal-summary {
+    font-weight: 300;
+    font-style: normal;
+    font-size: 0.9rem;
+
+}
+#modal-clickhere {
+    font-weight: 200;
+    font-style: normal;
+    font-size: .8rem;
+}
+.modal-footer {
+    border-top: none;
+}
+#modal-share {
+    border: 1px solid rgb(207, 207, 207);
+    border-radius: 5px;
+    margin-top: 40px;
+    height: 13vh;
+    width: 40vw;
+}
+#share-text {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 0.8rem;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+.card {
+    border: 1px solid rgb(207, 207, 207);
+    cursor: pointer;
+}
+.card-content {
+    display: flex;
+    align-items: center;
+    background-color: rgb(252, 252, 252);
+    border-radius: 5px;
+}
+.square-avatar {
+    margin-right: 10px; 
+    height: 80px;
+    width: 130px;
+    padding: 15px;
+    border-style: none;
+    border-radius: 5px;
+    object-fit: cover; /* This will ensure the image covers the entire area without distortion */
+}
+.text-content {
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    font-size: .7rem;
+}
+.news-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.sentiments-table {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-family: "Roboto", sans-serif;
+    margin-bottom: 30px;
+}
+.sentiments-table span {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.1rem;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.sentiments-table-style td{
+    font-style: normal;
+    font-size: .75rem;
+    border-bottom: 1px solid #d0d0d0;
+    padding-left: 60px;
+    padding-right: 60px;
+}
+.td-heading {
+    font-weight: 600; 
+    font-style: normal;
+    font-size: .75rem;
+}
+.mat-tab-body {
+    display: flex !important;
+  }
+  
+  mat-tab {
+    display: flex !important;
+    flex-direction: column;
+  }
+  
+  highcharts-chart {
+    flex-grow: 1;
+  }
