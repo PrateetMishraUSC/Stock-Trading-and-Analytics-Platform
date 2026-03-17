@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'RENDER_BACKEND_URL'
+  apiUrl: 'https://stock-trading-and-analytics-platform.onrender.com'
 };
