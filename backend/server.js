@@ -1,3 +1,4 @@
+require('dotenv').config();
 const http= require('http');
 const express = require('express');
 const app = require('./app');
@@ -9,7 +10,7 @@ const cors = require('cors');
 
 app.use(cors());
 
-const uri = "mongodb+srv://mishraprateet25:mishraprateet25@stockscluster.h1vmfzp.mongodb.net/";
+const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri);
 client.connect()
   .then(async () => {

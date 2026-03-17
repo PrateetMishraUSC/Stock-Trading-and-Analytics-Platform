@@ -5,6 +5,7 @@ import { insiderSentiments } from './../../models/sentiments';
 import { rTrends } from './../../models/rTrends'; 
 import { stockPrice } from './../../models/stockPrice';
 import { DataService } from './../../data.service';
+import { environment } from '../../../environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Observable, of } from 'rxjs';
@@ -85,7 +86,8 @@ export class SearchComponent {
   sellSuccess: boolean = false;
   quantity: number;
   walletData: any;
- 
+  currentNewsPage: number = 0;
+  newsPerPage: number = 10;
 
   constructor(
     private http: HttpClient,
@@ -239,7 +241,7 @@ export class SearchComponent {
       return of([]);
     }
     return this.http
-      .get<any>('http://localhost:3000/fetch-data', {
+      .get<any>(`${environment.apiUrl}/fetch-data`, {
         params: { search: value },
       })
       .pipe(
@@ -651,24 +653,21 @@ export class SearchComponent {
   }
 
   highchartSummaryData(ticker: string) {
-    this.searchService.highchartSummary(ticker).subscribe((data) => {
-      this.highchartSummary = data;
-      console.log('summary: ', data);
+    this.searchService.Highchart(ticker).subscribe((data) => {
       const price: number[][] = [];
-      const period: string[] = [];
-
-      this.highchartSummary.forEach((d: Highchart) => {
+      const last30 = data.slice(-30);
+      last30.forEach((d: Highchart) => {
         price.push([d.t, d.c]);
       });
-      console.log('price: ', price);
-      console.log('period: ', period);
+      const firstPrice = price.length > 0 ? price[0][1] : 0;
+      const lastPrice = price.length > 0 ? price[price.length - 1][1] : 0;
+      const lineColor = lastPrice >= firstPrice ? 'green' : 'red';
       this.chartOptions = {
         chart: {
           backgroundColor: '#f7f7f7',
         },
-
         title: {
-          text: this.control.value + ' Hourly Price Variation',
+          text: this.control.value + ' Daily Price (Last 30 Days)',
           align: 'center',
           style: {
             color: '#bcbcbc',
@@ -692,7 +691,7 @@ export class SearchComponent {
           {
             type: 'line',
             data: price,
-            color: this.isMarketOpen(Number(period)) ? 'green' : 'red',
+            color: lineColor,
             showInLegend: false,
           },
         ],
@@ -703,8 +702,35 @@ export class SearchComponent {
   companyNewsData(ticker: string) {
     this.searchService.companyNews(ticker).subscribe((data) => {
       this.companyNews = data;
-      console.log(data);
+      this.currentNewsPage = 0;
     });
+  }
+
+  get pagedNews(): any[] {
+    if (!this.companyNews) return [];
+    const start = this.currentNewsPage * this.newsPerPage;
+    return this.companyNews.slice(start, start + this.newsPerPage);
+  }
+
+  get totalNewsPages(): number {
+    if (!this.companyNews) return 0;
+    return Math.ceil(this.companyNews.length / this.newsPerPage);
+  }
+
+  nextNewsPage() {
+    if (this.currentNewsPage < this.totalNewsPages - 1) {
+      this.currentNewsPage++;
+    }
+  }
+
+  prevNewsPage() {
+    if (this.currentNewsPage > 0) {
+      this.currentNewsPage--;
+    }
+  }
+
+  onNewsImageError(event: Event) {
+    (event.target as HTMLImageElement).src = 'https://via.placeholder.com/130x80?text=No+Image';
   }
 
   HighchartData(ticker: string) {

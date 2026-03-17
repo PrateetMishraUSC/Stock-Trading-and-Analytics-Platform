@@ -8,7 +8,7 @@ app.use(cors());
 app.get('/fetch-data', async (req, res) => {
     try {
         const search = req.query.search;
-        const url = `https://finnhub.io/api/v1/search?q=${search}&token=cn8rl8pr01qocbph3220cn8rl8pr01qocbph322g`;
+        const url = `https://finnhub.io/api/v1/search?q=${search}&token=${process.env.FINNHUB_API_TOKEN}`;
         const response = await axios.get(url);
         res.send(response.data);
     } catch (error) {
@@ -19,7 +19,7 @@ app.get('/fetch-data', async (req, res) => {
 
 app.get('/api/data/profile', (req, res) => {
     const search = req.query.ticker;
-    const url = `https://finnhub.io/api/v1/stock/profile2?symbol=${search}&token=cn8rl8pr01qocbph3220cn8rl8pr01qocbph322g`;
+    const url = `https://finnhub.io/api/v1/stock/profile2?symbol=${search}&token=${process.env.FINNHUB_API_TOKEN}`;
     axios.get(url).then(response => {
         return res.json(response.data);
     }).catch(error => {
@@ -28,7 +28,7 @@ app.get('/api/data/profile', (req, res) => {
 
 app.get('/api/data/stockprice', (req, res) => {
     const search = req.query.ticker;
-    const url = `https://finnhub.io/api/v1/quote?symbol=${search}&token=cn8rl8pr01qocbph3220cn8rl8pr01qocbph322g`;
+    const url = `https://finnhub.io/api/v1/quote?symbol=${search}&token=${process.env.FINNHUB_API_TOKEN}`;
     axios.get(url).then(response => {
         return res.json(response.data);
     }).catch(error => {
@@ -37,7 +37,7 @@ app.get('/api/data/stockprice', (req, res) => {
 
 app.get('/api/data/rtrends', (req, res) => {
     const search = req.query.ticker;
-    const url = `  https://finnhub.io/api/v1/stock/recommendation?symbol=${search}&token=cn8rl8pr01qocbph3220cn8rl8pr01qocbph322g`;
+    const url = `  https://finnhub.io/api/v1/stock/recommendation?symbol=${search}&token=${process.env.FINNHUB_API_TOKEN}`;
     axios.get(url).then(response => {
         return res.json(response.data);
     }).catch(error => {
@@ -46,7 +46,7 @@ app.get('/api/data/rtrends', (req, res) => {
 
 app.get('/api/data/sentiments', (req, res) => {
     const search = req.query.ticker;
-    const url = `https://finnhub.io/api/v1/stock/insider-sentiment?symbol=${search}&from=2022-01-01&token=cn8rl8pr01qocbph3220cn8rl8pr01qocbph322g`;
+    const url = `https://finnhub.io/api/v1/stock/insider-sentiment?symbol=${search}&from=2022-01-01&token=${process.env.FINNHUB_API_TOKEN}`;
     axios.get(url).then(response => {
         return res.json(response.data);
     }).catch(error => {
@@ -55,7 +55,7 @@ app.get('/api/data/sentiments', (req, res) => {
 
 app.get('/api/data/peers', (req, res) => {
     const search = req.query.ticker;
-    const url = `https://finnhub.io/api/v1/stock/peers?symbol=${search}&token=cn8rl8pr01qocbph3220cn8rl8pr01qocbph322g`;
+    const url = `https://finnhub.io/api/v1/stock/peers?symbol=${search}&token=${process.env.FINNHUB_API_TOKEN}`;
     axios.get(url).then(response => {
         return res.json(response.data);
     }).catch(error => {
@@ -65,7 +65,7 @@ app.get('/api/data/peers', (req, res) => {
 app.get('/api/data/earnings', (req, res) => {
 
     const search = req.query.ticker;
-    const url = `https://finnhub.io/api/v1/stock/earnings?symbol=${search}&token=cn8rl8pr01qocbph3220cn8rl8pr01qocbph322g`;
+    const url = `https://finnhub.io/api/v1/stock/earnings?symbol=${search}&token=${process.env.FINNHUB_API_TOKEN}`;
     axios.get(url).then(response => {
         return res.json(response.data);
     }).catch(error => {
@@ -81,7 +81,7 @@ app.get('/api/data/earnings', (req, res) => {
     const fromDate = sevenDaysAgo.toISOString().split('T')[0];
 
     const search = req.query.ticker;
-    const url = `https://finnhub.io/api/v1/company-news?symbol=${search}&from=${fromDate}&to=${toDate}&token=cn8rl8pr01qocbph3220cn8rl8pr01qocbph322g`;
+    const url = `https://finnhub.io/api/v1/company-news?symbol=${search}&from=${fromDate}&to=${toDate}&token=${process.env.FINNHUB_API_TOKEN}`;
     axios.get(url).then(response => {
         return res.json(response.data);
     }).catch(error => {
@@ -98,10 +98,11 @@ app.get('/api/data/highcharts', (req, res) => {
     const fromDate = sixMonthsAgo.toISOString().split('T')[0];
 
     const search = req.query.ticker;
-    const url = `https://api.polygon.io/v2/aggs/ticker/${search}/range/1/day/${fromDate}/${toDate}?adjusted=true&sort=asc&apiKey=94GYmeFAD3Jf1tWiRNN2PG7BEwDfxPzl`;
+    const url = `https://api.polygon.io/v2/aggs/ticker/${search}/range/1/day/${fromDate}/${toDate}?adjusted=true&sort=asc&apiKey=${process.env.POLYGON_API_KEY}`;
     axios.get(url).then(response => {
-        return res.json(response.data.results);
+        return res.json(response.data.results || []);
     }).catch(error => {
+        res.json([]);
     });
   });
 
@@ -115,10 +116,11 @@ app.get('/api/data/highcharts', (req, res) => {
     fromDate = dateFormatted(from);
 
     const search = req.query.ticker;
-    const url = `https://api.polygon.io/v2/aggs/ticker/${search}/range/1/hour/${fromDate}/${todayDate}?adjusted=true&sort=asc&apiKey=94GYmeFAD3Jf1tWiRNN2PG7BEwDfxPzl`;
+    const url = `https://api.polygon.io/v2/aggs/ticker/${search}/range/1/hour/${fromDate}/${todayDate}?adjusted=true&sort=asc&apiKey=${process.env.POLYGON_API_KEY}`;
     axios.get(url).then(response => {
-        return res.json(response.data.results);
+        return res.json(response.data.results || []);
     }).catch(error => {
+        res.json([]);
     });
 
 });

@@ -1,13 +1,15 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 .footer {
-    font-weight: 300;  
+    font-weight: 300;
     line-height: 40px;
-    margin-top: auto;
+    margin-top: 10vh;
     background-color: #ededed;
 }
 .footer-fixed {
     width: 100%;
-    min-height: 95vh;
-    display: flex;
-    flex-direction: column;
     font-family: "Roboto", sans-serif;
 }

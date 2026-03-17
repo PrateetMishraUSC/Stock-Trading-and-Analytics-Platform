@@ -93,28 +93,11 @@ mat-toolbar {
 .page-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
 }
 .content-wrapper {
   flex: 1;
 }
-.footer {
-    width: 100%;
-    font-weight: 300;  
-    line-height: 40px;
-    margin-top: auto;
-    background-color: #ededed;
-}
-.footer-fixed {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    font-family: "Roboto", sans-serif;
-}
-#finnhub-link {
-    margin-left: 3px;
-}
+
 mat-icon:hover {
     cursor: pointer;
 }
@@ -129,9 +112,8 @@ mat-icon:hover {
 }
 
 .logo {
-    height: 12%;
+    height: 30%;
     width: auto;
-
 }
 #market-status {
     font-family: "Roboto", sans-serif;
@@ -175,17 +157,13 @@ mat-icon:hover {
     padding-right: 10px;
 }
 .right-stock-data {
-    position: absolute;
-    top: 22%;
-    left: 68%;
-    height: 20%;
-    width: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     font-family: "Roboto", sans-serif;
     line-height: 25px;
+    margin-top: 10px;
 }
 #stockprice-c {
     font-weight: 500;
@@ -207,12 +185,32 @@ mat-icon:hover {
     font-size: .7rem;
 }
 .all-tabs{
-    position: absolute;
-    top: 48%;
-    left: 15%;
     width: 70%;
+    margin: 10px auto 0;
     font-family: "Roboto", sans-serif;
-
+}
+.summary-row {
+    display: flex;
+    gap: 70px;
+    margin-top: 10px;
+    align-items: flex-start;
+}
+.summary-chart {
+    flex: 1;
+    min-width: 0;
+}
+.summary-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+    align-items: flex-start;
+}
+.summary-left {
+    flex: 0 0 auto;
+}
+.summary-right {
+    flex: 1;
+    min-width: 0;
 }
 .all-prices {
     display: flex;
@@ -220,20 +218,14 @@ mat-icon:hover {
     justify-content: center;
     font-weight: 300;
     font-style: normal;
-    font-size: .7rem;
-    margin-left: 7%;
-    margin-top: 3%;
+    font-size: 1rem;
 }
 .about-company {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     font-weight: 300;
     font-style: normal;
-    font-size: .7rem;
-    margin-right: 47%;
-    margin-top: 3%;
+    font-size: 1rem;
     line-height: 25px;
 }
 #about-company-heading {
@@ -243,7 +235,7 @@ mat-icon:hover {
 #peers-list { 
     font-weight: 300;
     font-style: normal;
-    font-size: .6rem;
+    font-size: .8rem;
 }
 .card-container {
     display: grid;
@@ -322,6 +314,18 @@ mat-icon:hover {
     flex-wrap: wrap;
     justify-content: space-between;
 }
+.news-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+.news-page-info {
+    font-size: 0.85rem;
+    font-weight: 400;
+}
 .sentiments-table {
     display: flex;
     align-items: center;
@@ -349,15 +353,20 @@ mat-icon:hover {
     font-style: normal;
     font-size: .75rem;
 }
+.insights-charts {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
 .mat-tab-body {
     display: flex !important;
   }
-  
+
   mat-tab {
     display: flex !important;
     flex-direction: column;
   }
-  
+
   highcharts-chart {
     flex-grow: 1;
   }

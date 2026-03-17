@@ -89,7 +89,7 @@
     >
       {{ stockData.ticker }} sold successfully.
     </ngb-alert>
-    <div class="left-stock-data col-5 col-md-8 mt-4  d-flex justify-content-center align-items-center">
+    <div class="left-stock-data col-4 mt-1 d-flex justify-content-center align-items-center">
       <span id="stockdata-ticker"
         >{{ stockData.ticker
         }}<span
@@ -223,33 +223,33 @@
         </div>
       </ng-template>
     </div>
-    <div class="col">
-      <img class="logo img-fluid mt-n3" [src]="stockData.logo" alt="Company Logo" />
+    <div class="col-4 d-flex justify-content-center align-items-center mt-1">
+      <img class="logo img-fluid" [src]="stockData.logo" alt="Company Logo" />
     </div>
-  </div>
-  <div *ngIf="stockPrice">
-    <div class="right-stock-data">
-      <span
-        id="stockprice-c"
-        [style.color]="
-          stockPrice.d < 0 || stockPrice.dp < 0 ? 'red' : 'green'
-        "
-        >{{ stockPrice.c }}</span
-      >
-      <span
-        id="stockprice-d"
-        [style.color]="stockPrice.d < 0 ? 'red' : 'green'"
-      >
+    <div class="col-4 mt-2 d-flex justify-content-center align-items-center" *ngIf="stockPrice">
+      <div class="right-stock-data">
         <span
-          style="font-size: 0.8rem; vertical-align: middle; margin-right: 5px"
-          >{{ stockPrice.d < 0 ? "▼" : "▲" }}</span
-        >{{ stockPrice.d }} (<span
-          id="stockprice-dp"
-          [style.color]="stockPrice.dp < 0 ? 'red' : 'green'"
-          >{{ stockPrice.dp | number : "1.2-2" }}%</span
-        >)
-      </span>
-      <span id="stockprice-t">{{ transformTimestamp(stockPrice.t) }}</span>
+          id="stockprice-c"
+          [style.color]="
+            stockPrice.d < 0 || stockPrice.dp < 0 ? 'red' : 'green'
+          "
+          >{{ stockPrice.c }}</span
+        >
+        <span
+          id="stockprice-d"
+          [style.color]="stockPrice.d < 0 ? 'red' : 'green'"
+        >
+          <span
+            style="font-size: 0.8rem; vertical-align: middle; margin-right: 5px"
+            >{{ stockPrice.d < 0 ? "▼" : "▲" }}</span
+          >{{ stockPrice.d }} (<span
+            id="stockprice-dp"
+            [style.color]="stockPrice.dp < 0 ? 'red' : 'green'"
+            >{{ stockPrice.dp | number : "1.2-2" }}%</span
+          >)
+        </span>
+        <span id="stockprice-t">{{ transformTimestamp(stockPrice.t) }}</span>
+      </div>
     </div>
   </div>
 </div>
@@ -260,48 +260,45 @@
     <div *ngIf="stockPrice && stockData && companyNews" class="all-tabs">
       <mat-tab-group animationDuration="0ms">
         <mat-tab label="Summary">
-          <div class="all-prices">
-            <span><b>High Price: </b>{{ stockPrice.h }}</span>
-            <span><b>Low Price: </b>{{ stockPrice.l }}</span>
-            <span><b>Open Price: </b>{{ stockPrice.o }}</span>
-            <span><b>Prev. Close: </b>{{ stockPrice.pc }}</span>
+          <div class="summary-container">
+            <div class="all-prices">
+              <span><b>High Price: </b>{{ stockPrice.h }}</span>
+              <span><b>Low Price: </b>{{ stockPrice.l }}</span>
+              <span><b>Open Price: </b>{{ stockPrice.o }}</span>
+              <span><b>Prev. Close: </b>{{ stockPrice.pc }}</span>
+            </div>
+            <div class="about-company">
+              <h6 id="about-company-heading"><u>About the company</u></h6>
+              <span>IPO Start Date: {{ stockData.ipo }}</span>
+              <span>Industry: {{ stockData.finnhubIndustry }}</span>
+              <span
+                >Webpage:
+                <a [href]="stockData.weburl" target="_blank">{{
+                  stockData.weburl
+                }}</a></span
+              >
+              <span>Company peers:</span>
+              <span id="peers-list">
+                <a [routerLink]="['/search', peer]" *ngFor="let peer of peers"
+                  >{{ peer }},</a
+                >,
+              </span>
+            </div>
+            <div class="summary-right">
+              <highcharts-chart
+                [Highcharts]="Highcharts"
+                [options]="chartOptions"
+                [oneToOne]="true"
+                style="width: 100%; height: 280px; display: block;"
+              >
+              </highcharts-chart>
+            </div>
           </div>
-          <div class="about-company">
-            <h6 id="about-company-heading"><u>About the company</u></h6>
-            <span>IPO Start Date: {{ stockData.ipo }}</span>
-            <span>Industry: {{ stockData.finnhubIndustry }}</span>
-            <span
-              >Webpage:
-              <a [href]="stockData.weburl" target="_blank">{{
-                stockData.weburl
-              }}</a></span
-            >
-            <span>Company peers:</span>
-            <span id="peers-list">
-              <a [routerLink]="['/search', peer]" *ngFor="let peer of peers"
-                >{{ peer }},</a
-              >,
-            </span>
-          </div>
-          <highcharts-chart
-            [Highcharts]="Highcharts"
-            [options]="chartOptions"
-            [oneToOne]="true"
-            style="
-              width: 473px;
-              height: 280px;
-              display: block;
-              position: absolute;
-              top: 0%;
-              left: 53%;
-            "
-          >
-          </highcharts-chart>
         </mat-tab>
         <mat-tab label="Top News">
           <div class="card-container">
             <div
-              *ngFor="let newsItem of companyNews"
+              *ngFor="let newsItem of pagedNews"
               class="card"
               (click)="companyNewsModal(content, newsItem)"
             >
@@ -380,11 +377,21 @@
                   mat-card-avatar
                   class="square-avatar"
                   [src]="newsItem.image"
+                  (error)="onNewsImageError($event)"
                   alt="News image"
                 />
                 <div class="text-content">{{ newsItem.headline }}</div>
               </div>
             </div>
+          </div>
+          <div class="news-pagination" *ngIf="companyNews && companyNews.length > newsPerPage">
+            <button class="btn btn-sm btn-outline-primary" (click)="prevNewsPage()" [disabled]="currentNewsPage === 0">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <span class="news-page-info">{{ currentNewsPage + 1 }} / {{ totalNewsPages }}</span>
+            <button class="btn btn-sm btn-outline-primary" (click)="nextNewsPage()" [disabled]="currentNewsPage >= totalNewsPages - 1">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
           </div>
         </mat-tab>
 
@@ -424,34 +431,24 @@
               </tr>
             </table>
           </div>
-          <highcharts-chart
-            [Highcharts]="Highcharts"
-            [options]="barChartOptions"
-            [oneToOne]="true"
-            [(update)]="updateFlag"
-            style="
-              width: 50%;
-              height: 280px;
-              display: block;
-              position: relative;
-            "
-          >
-          </highcharts-chart>
-          <highcharts-chart
-            [Highcharts]="Highcharts"
-            [options]="splineChartOptions"
-            [oneToOne]="true"
-            [(update)]="updateFlag"
-            style="
-              width: 48%;
-              height: 280px;
-              display: block;
-              position: absolute;
-              top: 37%;
-              left: 52%;
-            "
-          >
-          </highcharts-chart>
+          <div class="insights-charts">
+            <highcharts-chart
+              [Highcharts]="Highcharts"
+              [options]="barChartOptions"
+              [oneToOne]="true"
+              [(update)]="updateFlag"
+              style="flex: 1; min-width: 0; height: 300px; display: block;"
+            >
+            </highcharts-chart>
+            <highcharts-chart
+              [Highcharts]="Highcharts"
+              [options]="splineChartOptions"
+              [oneToOne]="true"
+              [(update)]="updateFlag"
+              style="flex: 1; min-width: 0; height: 300px; display: block;"
+            >
+            </highcharts-chart>
+          </div>
         </mat-tab>
       </mat-tab-group>
     </div>

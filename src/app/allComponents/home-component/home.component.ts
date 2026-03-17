@@ -5,6 +5,7 @@ import { insiderSentiments } from './../../models/sentiments';
 import { rTrends } from './../../models/rTrends';
 import { stockPrice } from './../../models/stockPrice';
 import { DataService } from './../../data.service';
+import { environment } from '../../../environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Observable, of } from 'rxjs';
@@ -116,7 +117,7 @@ export class HomeComponent {
       return of([]);
     }
     return this.http
-      .get<any>('http://localhost:3000/fetch-data', {
+      .get<any>(`${environment.apiUrl}/fetch-data`, {
         params: { search: value },
       })
       .pipe(
